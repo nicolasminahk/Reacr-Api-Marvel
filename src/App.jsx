@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import axios from 'axios'
+// import './App.css'
+import { Route, Routes } from 'react-router-dom'
+import Home from './views/Home'
+import CharacterView from './views/CharacterView'
+import ComicsView from './views/ComicsView'
+
+//Request Caracter urñ
+// https://gateway.marvel.com:443/v1/public/characters?apikey=
+
+//  PUBLIC KEY = c20560f4d16fdd15e1d5bc655d65fdc8
+
+//  PRIVATE KEY = 47edf73a22333c91df19c934de1bc821ab030e52
+
+// 147edf73a22333c91df19c934de1bc821ab030e52c20560f4d16fdd15e1d5bc655d65fdc8
+
+// HASH =  bf9532152981aaf1fbb3a4dbfa9f3cbd
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/characters" element={<CharacterView />} />
+                <Route path="/comics" element={<ComicsView />} />
+            </Routes>
+        </>
+    )
 }
 
 export default App
