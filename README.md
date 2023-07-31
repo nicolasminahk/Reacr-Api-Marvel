@@ -4,7 +4,7 @@ Prueba Técnica realizada para Sitenso
 
 ## Descripción
 
-Esta aplicación web es una prueba técnica realizada para Sitenso, que consiste en un clon de la API de Marvel. Permite buscar personajes y cómics de Marvel utilizando la API oficial de Marvel.
+Esta aplicación web es una prueba técnica realizada para Sitenso, que consiste en una web en base a la API de Marvel. Permite buscar personajes y cómics de Marvel utilizando la API oficial de Marvel.
 
 ## Tecnologías Utilizadas
 
@@ -12,7 +12,7 @@ Esta aplicación web es una prueba técnica realizada para Sitenso, que consiste
 -   Vite
 -   Axios
 -   Material UI
--   Otros...
+
 
 ## Instrucciones de Instalación
 
