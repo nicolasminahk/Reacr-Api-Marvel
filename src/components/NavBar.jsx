@@ -1,27 +1,10 @@
-import React, { useState } from 'react'
-import {
-    AppBar,
-    Toolbar,
-    IconButton,
-    Typography,
-    Button,
-    Drawer,
-    Box,
-    MenuItem,
-    Menu,
-    styled,
-    Paper,
-    InputBase,
-} from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { AppBar, Toolbar, IconButton, Box, MenuItem, styled, Paper, InputBase, Stack } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
-import MenuIcon from '@mui/icons-material/Menu'
-import MenuOpenIcon from '@mui/icons-material/MenuOpen'
-import { useNavigate } from 'react-router-dom'
-import NavList from './NavList'
+
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import logo from '/logo.png'
-import CircleIcon from '@mui/icons-material/Circle'
-import { Search } from '@mui/icons-material'
-import SearchComponent from './SearchComponent'
+import NavList from './NavList'
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2),
@@ -35,6 +18,7 @@ const Navbar = () => {
     const navigate = useNavigate()
     const [showSearch, setShowSearch] = useState(false)
     const [searchText, setSearchText] = useState('')
+    const [showNavList, setShowNavList] = useState(false)
 
     const handleSearchIconClick = () => {
         setShowSearch(!showSearch)
@@ -43,11 +27,52 @@ const Navbar = () => {
     const handleSearchInputChange = (e) => {
         setSearchText(e.target.value)
     }
+    // Función para manejar el clic en los círculos y mostrar/ocultar el NavList
+    const handleCircleClick = () => {
+        setShowNavList(!showNavList)
+    }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed" sx={{ background: 'transparent', boxShadow: 'none' }}>
                 <Toolbar style={{ backgroundColor: 'red' }}>
+                    <Stack direction="column" alignItems="center">
+                        {/* Tres círculos negros */}
+                        <Box
+                            sx={{
+                                width: '8px',
+                                height: '8px',
+                                borderRadius: '50%',
+                                bgcolor: 'black',
+                                mb: '4px',
+                                cursor: 'pointer',
+                            }}
+                            onClick={handleCircleClick}
+                        />
+                        <Box
+                            sx={{
+                                width: '8px',
+                                height: '8px',
+                                borderRadius: '50%',
+                                bgcolor: 'black',
+                                mb: '4px',
+                                cursor: 'pointer',
+                            }}
+                            onClick={handleCircleClick}
+                        />
+                        <Box
+                            sx={{
+                                width: '8px',
+                                height: '8px',
+                                borderRadius: '50%',
+                                bgcolor: 'black',
+                                mb: '4px',
+                                cursor: 'pointer',
+                            }}
+                            onClick={handleCircleClick}
+                        />
+                    </Stack>
+
                     <img
                         src={logo}
                         alt="Company Logo"
@@ -56,31 +81,29 @@ const Navbar = () => {
                             navigate('/')
                         }}
                     />
-                    <Button
-                        onClick={() => {
-                            navigate('/')
-                        }}
-                    />
-                    <SearchIconWrapper>
-                        <IconButton onClick={handleSearchIconClick} sx={{ mr: -4 }}>
-                            <SearchIcon fontSize="large" sx={{ color: 'white' }} />
-                        </IconButton>
-                    </SearchIconWrapper>
-                    {showSearch && (
-                        <Paper
-                            component="form"
-                            sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 600 }}
-                        >
-                            <InputBase
-                                value={searchText}
-                                onChange={handleSearchInputChange}
-                                placeholder="Nombre"
-                                sx={{ ml: 1, flex: 1 }}
-                            />
-                        </Paper>
-                    )}
+                    <Box sx={{ flexGrow: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <IconButton onClick={handleSearchIconClick} sx={{ mr: 1 }}>
+                                <SearchIcon fontSize="large" sx={{ color: 'white' }} />
+                            </IconButton>
+                            {showSearch && (
+                                <Paper
+                                    component="form"
+                                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 600 }}
+                                >
+                                    <InputBase
+                                        value={searchText}
+                                        onChange={handleSearchInputChange}
+                                        placeholder="Nombre"
+                                        sx={{ ml: 1, flex: 1 }}
+                                    />
+                                </Paper>
+                            )}
+                        </Box>
+                    </Box>
                 </Toolbar>
             </AppBar>
+            {showNavList && <NavList />}
         </Box>
     )
 }

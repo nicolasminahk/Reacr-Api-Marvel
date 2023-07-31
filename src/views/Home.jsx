@@ -10,9 +10,13 @@ const Home = () => {
     return (
         <>
             <Navbar />
-            <NavList />
-            <Grid container justifyContent="center" alignItems={'center'} style={{ padding: '2rem' }}>
-                <Grid item xs={12} sm={6} style={{ margin: '8px' }}>
+            <Grid
+                container
+                justifyContent="center"
+                alignItems={'center'}
+                style={{ padding: '2rem', marginTop: '100px' }}
+            >
+                <Grid item xs={12} sm={6} style={{ margin: '8px', mt: '80px' }}>
                     <CardComics />
                 </Grid>
                 <Grid item xs={12} sm={6} style={{ margin: '8px' }}>

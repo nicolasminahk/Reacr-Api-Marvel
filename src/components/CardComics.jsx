@@ -10,6 +10,8 @@ import comic from '/comic.jpg'
 function CardComics() {
     const [featuredComics, setFeaturedComics] = useState(null)
     const navigate = useNavigate()
+    const isMobile = useMediaQuery('(max-width: 600px)')
+
     useEffect(() => {
         axios
             .get(
@@ -30,6 +32,7 @@ function CardComics() {
                     onClick={() => {
                         navigate('/comics')
                     }}
+                    className={isMobile ? 'card-mobile' : 'card-desktop'}
                 >
                     <CardMedia component="img" height="40" image={comic} alt={''} />
                     <CardMedia

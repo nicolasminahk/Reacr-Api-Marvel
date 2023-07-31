@@ -22,6 +22,8 @@ const Comics = () => {
             )
             .then((res) => {
                 setComics(res.data.data.results)
+                console.log(res.data.data.results)
+
                 setTotalPages(Math.ceil(res.data.data.total / ITEMS_PER_PAGE))
             })
             .catch((error) => console.log(error))
@@ -50,6 +52,13 @@ const Comics = () => {
     const closeModal = () => {
         setSelectedComicId(null)
         setShowModal(false)
+    }
+    const truncateTitle = (title, maxWords) => {
+        const words = title.split(' ')
+        if (words.length > maxWords) {
+            return words.slice(0, maxWords).join(' ') + '...'
+        }
+        return title
     }
     return (
         <div>
@@ -109,8 +118,18 @@ const Comics = () => {
                                             width: '20px',
                                             height: '3px',
                                             backgroundColor: 'red',
-                                            transform: 'rotate(45deg)',
+                                            transform: 'rotate(-45deg)',
                                             mx: '5px',
+                                            ml: -5,
+                                        }}
+                                    />
+                                    <Box
+                                        sx={{
+                                            width: '20px',
+                                            height: '3px',
+                                            backgroundColor: 'red',
+                                            transform: 'rotate(-45deg)',
+                                            mr: -5,
                                         }}
                                     />
                                     <Box
@@ -122,8 +141,55 @@ const Comics = () => {
                                         }}
                                     />
                                 </Box>
-
                                 <CardContent
+                                    sx={{
+                                        height: '120px',
+                                        flexGrow: 1,
+                                        backgroundColor: 'red',
+                                        color: 'white',
+                                        p: 2,
+                                        display: 'grid', // Cambiamos el display a "grid"
+                                        gridTemplateColumns: '1fr', // Una sola columna
+                                        gridTemplateRows: '1fr auto', // Dos filas: la primera ocupando todo el espacio disponible y la segunda de tamaño automático
+                                        gridGap: '8px', // Espacio entre las filas
+                                    }}
+                                >
+                                    <Typography
+                                        variant="subtitle2"
+                                        fontSize={'x-large'}
+                                        sx={{ fontWeight: 'bold', gridColumn: '1 / span 2' }}
+                                    >
+                                        {truncateTitle(comic.title, 5)}
+                                    </Typography>
+
+                                    <Grid container justifyContent="space-between">
+                                        <Grid item>
+                                            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                                Published:
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item>
+                                            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                                {comic.dates &&
+                                                    comic.dates.find((date) => date.type === 'onsaleDate')?.date &&
+                                                    new Date(
+                                                        comic.dates.find((date) => date.type === 'onsaleDate').date
+                                                    ).toLocaleDateString('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'short', // Utilizamos 'short' para mostrar el mes abreviado
+                                                        day: 'numeric',
+                                                    })}
+                                            </Typography>
+                                        </Grid>
+
+                                        <Typography variant="body2" sx={{ fontWeight: 'light', mt: 1, mb: 10 }}>
+                                            {comic.description
+                                                ? comic.description.slice(0, 50) + '...'
+                                                : 'No description available'}
+                                        </Typography>
+                                    </Grid>
+                                </CardContent>
+                                {/* <CardContent
                                     sx={{
                                         height: '120px',
                                         flexGrow: 1,
@@ -144,7 +210,7 @@ const Comics = () => {
                                                     fontSize={'x-large'}
                                                     sx={{ fontWeight: 'bold' }}
                                                 >
-                                                    {comic.title}
+                                                    {truncateTitle(comic.title, 5)}
                                                 </Typography>
                                             </Grid>
                                         </Grid>
@@ -153,35 +219,37 @@ const Comics = () => {
                                         <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                                             Published:
                                         </Typography>
-                                        <Typography variant="body2">{comic.dates?.published}</Typography>
+                                        <Typography variant="body2">
+                                            {comic.dates &&
+                                                comic.dates.find((date) => date.type === 'onsaleDate')?.date}
+                                        </Typography>
                                     </Box>
                                     <Typography variant="body2" sx={{ fontWeight: 'light', mt: 1 }}>
                                         {comic.description
                                             ? comic.description.slice(0, 100) + '...'
                                             : 'No description available'}
                                     </Typography>
-                                </CardContent>
+                                </CardContent> */}
                             </Card>
                         </animated.div>
                     </Grid>
                 ))}
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                    {/* Paginador con números y puntos */}
-                    <Pagination
-                        count={totalPages}
-                        page={currentPage}
-                        onChange={handleChangePage}
-                        color="primary"
-                        renderItem={(item) => (
-                            <PaginationItem
-                                component={Button}
-                                {...item}
-                                sx={{ bgcolor: item.page === currentPage ? 'red' : 'transparent' }}
-                            />
-                        )}
-                    />
-                </Box>
             </Grid>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: 2 }}>
+                {/* Paginador con números y puntos */}
+                <Pagination
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={handleChangePage}
+                    renderItem={(item) => (
+                        <PaginationItem
+                            component={Button}
+                            {...item}
+                            sx={{ bgcolor: item.page === currentPage ? 'red' : 'transparent', fontWeight: 'bold' }}
+                        />
+                    )}
+                />
+            </Box>
 
             {showModal && selectedComicId && (
                 <Box
@@ -201,9 +269,25 @@ const Comics = () => {
                     <DetailCard
                         title={selectedComic.title}
                         name={selectedComic.title}
-                        // imageUrl={`${selectedComic.thumbnail?.path}.${selectedComic.thumbnail?.extension}`}
-                        description={selectedComic.description}
-                        releaseDate={selectedComic.dates?.published}
+                        image={`${selectedComic.thumbnail?.path}.${selectedComic.thumbnail?.extension}`}
+                        description={
+                            selectedComic.description
+                                ? selectedComic.description.slice(0, 100) + '...'
+                                : 'No description available'
+                        }
+                        published={
+                            selectedComic.dates.find((date) => date.type === 'onsaleDate')?.date &&
+                            new Date(
+                                selectedComic.dates.find((date) => date.type === 'onsaleDate').date
+                            ).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                            })
+                        }
+                        numPages={selectedComic.pageCount}
+                        writer={selectedComic.creators.items[1]?.name}
+                        penciller={selectedComic.creators.items[0]?.name}
                     />
                 </Box>
             )}

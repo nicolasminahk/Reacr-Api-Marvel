@@ -3,23 +3,52 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 // import { Grid, Typography } from '@mui/material'
 import Typography from '@mui/material/Typography'
-import { Box, Card, CardContent, CardHeader, CardMedia, Grid } from '@mui/material'
+import { Box, Button, Card, CardContent, CardHeader, CardMedia, Grid, Pagination, PaginationItem } from '@mui/material'
 import { useSpring, animated } from 'react-spring'
+import DetailCard from '../common/DetailCard'
+import { red } from '@mui/material/colors'
+import SearchComponent from './SearchComponent'
 
+const ITEMS_PER_PAGE = 20
 const Characters = () => {
     const [characters, setCharacters] = useState([])
+    const [currentPage, setCurrentPage] = useState(1) // Página actual, inicia en 1
+    const [totalPages, setTotalPages] = useState(1) // Número total de páginas, inicia en 1
+    const [selectedCharacter, setSelectedCharacter] = useState(null) // Personaje seleccionado
+    const [showModal, setShowModal] = useState(false) // Estado para mostrar/ocultar el modal
 
     useEffect(() => {
-        axios
-            .get(
-                'https://gateway.marvel.com:443/v1/public/characters?ts=1&apikey=c20560f4d16fdd15e1d5bc655d65fdc8&hash=bf9532152981aaf1fbb3a4dbfa9f3cbd'
-            )
-            .then((res) => {
-                setCharacters(res.data.data.results)
-                console.log(res.data.data.results)
-            })
-            .catch((error) => console.log(error))
-    }, [])
+        // Función para obtener los personajes desde la API
+        const fetchCharacters = () => {
+            axios
+                .get(
+                    `https://gateway.marvel.com:443/v1/public/characters?ts=1&apikey=c20560f4d16fdd15e1d5bc655d65fdc8&hash=bf9532152981aaf1fbb3a4dbfa9f3cbd&limit=${ITEMS_PER_PAGE}&offset=${
+                        (currentPage - 1) * ITEMS_PER_PAGE
+                    }`
+                )
+                .then((res) => {
+                    setCharacters(res.data.data.results)
+                    console.log(res.data.data.results)
+
+                    setTotalPages(Math.ceil(res.data.data.total / ITEMS_PER_PAGE))
+                })
+                .catch((error) => console.log(error))
+        }
+
+        fetchCharacters() // Llamada inicial al cargar el componente
+
+        // Limpiar el estado al desmontar el componente para evitar llamadas innecesarias si el componente se desmonta
+        return () => {
+            setCharacters([])
+            setCurrentPage(1)
+            setTotalPages(1)
+        }
+    }, [currentPage])
+
+    const handlePageChange = (pageNumber) => {
+        // Cambiar la página actual cuando se haga clic en un número de página en el paginador
+        setCurrentPage(pageNumber)
+    }
 
     const [hoveredCard, setHoveredCard] = useState(null)
 
@@ -29,6 +58,18 @@ const Characters = () => {
 
     const handleMouseLeave = () => {
         setHoveredCard(null)
+    }
+
+    // Función para abrir el modal y establecer el personaje seleccionado
+    const handleCharacterClick = (character) => {
+        setSelectedCharacter(character)
+        setShowModal(true)
+    }
+
+    // Función para cerrar el modal y limpiar el personaje seleccionado
+    const closeModal = () => {
+        setSelectedCharacter(null)
+        setShowModal(false)
     }
 
     return (
@@ -51,6 +92,7 @@ const Characters = () => {
                                 }}
                             >
                                 <Card
+                                    onClick={() => handleCharacterClick(character)}
                                     sx={{
                                         // maxWidth: 300,
                                         maxWidth: 200,
@@ -87,8 +129,17 @@ const Characters = () => {
                                                     width: '20px',
                                                     height: '3px',
                                                     backgroundColor: 'black',
-                                                    transform: 'rotate(45deg)',
-                                                    mx: '5px',
+                                                    transform: 'rotate(-45deg)',
+                                                    mr: -5,
+                                                }}
+                                            />
+                                            <Box
+                                                sx={{
+                                                    width: '20px',
+                                                    height: '3px',
+                                                    backgroundColor: 'black',
+                                                    transform: 'rotate(-45deg)',
+                                                    mr: 3,
                                                 }}
                                             />
                                             <Box
@@ -126,6 +177,49 @@ const Characters = () => {
                         </Grid>
                     ))}
                 </Grid>
+                {/* Modal para mostrar el detalle del personaje */}
+                {showModal && selectedCharacter && (
+                    <Box
+                        sx={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        }}
+                        onClick={closeModal}
+                    >
+                        <DetailCard
+                            name={selectedCharacter.name}
+                            image={`${selectedCharacter.thumbnail?.path}.${selectedCharacter.thumbnail?.extension}`}
+                            description={selectedCharacter.description}
+                        />
+                    </Box>
+                )}
+                {/* Renderizar el paginador */}
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2 }}>
+                    <Pagination
+                        count={totalPages}
+                        page={currentPage}
+                        onChange={handlePageChange}
+                        sx={{ fontWeight: 'bold' }}
+                        renderItem={(item) => (
+                            <PaginationItem
+                                component={Button}
+                                {...item}
+                                sx={{
+                                    bgcolor: item.page === currentPage ? 'red' : 'transparent',
+                                    color: 'black',
+                                    fontWeight: 'bold',
+                                }}
+                            />
+                        )}
+                    />
+                </Box>
             </div>
         </>
     )

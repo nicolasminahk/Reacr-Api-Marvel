@@ -36,6 +36,7 @@ function CardCharacter() {
                         width: isMobile ? '100%' : 'auto',
                         marginBottom: isMobile ? '1rem' : '0',
                     }}
+                    className={isMobile ? 'card-mobile' : 'card-desktop'}
                     onClick={() => {
                         navigate('/characters')
                     }}
