@@ -1,24 +1,20 @@
 import React from 'react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-// import { Grid, Typography } from '@mui/material'
 import Typography from '@mui/material/Typography'
-import { Box, Button, Card, CardContent, CardHeader, CardMedia, Grid, Pagination, PaginationItem } from '@mui/material'
-import { useSpring, animated } from 'react-spring'
+import { Box, Button, Card, CardMedia, Grid, Pagination, PaginationItem } from '@mui/material'
+import { animated } from 'react-spring'
 import DetailCard from '../common/DetailCard'
-import { red } from '@mui/material/colors'
-import SearchComponent from './SearchComponent'
 
 const ITEMS_PER_PAGE = 20
 const Characters = () => {
     const [characters, setCharacters] = useState([])
-    const [currentPage, setCurrentPage] = useState(1) // Página actual, inicia en 1
-    const [totalPages, setTotalPages] = useState(1) // Número total de páginas, inicia en 1
-    const [selectedCharacter, setSelectedCharacter] = useState(null) // Personaje seleccionado
-    const [showModal, setShowModal] = useState(false) // Estado para mostrar/ocultar el modal
+    const [currentPage, setCurrentPage] = useState(1)
+    const [totalPages, setTotalPages] = useState(1)
+    const [selectedCharacter, setSelectedCharacter] = useState(null)
+    const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {
-        // Función para obtener los personajes desde la API
         const fetchCharacters = () => {
             axios
                 .get(
@@ -28,16 +24,13 @@ const Characters = () => {
                 )
                 .then((res) => {
                     setCharacters(res.data.data.results)
-                    console.log(res.data.data.results)
-
                     setTotalPages(Math.ceil(res.data.data.total / ITEMS_PER_PAGE))
                 })
                 .catch((error) => console.log(error))
         }
 
-        fetchCharacters() // Llamada inicial al cargar el componente
+        fetchCharacters()
 
-        // Limpiar el estado al desmontar el componente para evitar llamadas innecesarias si el componente se desmonta
         return () => {
             setCharacters([])
             setCurrentPage(1)
@@ -46,7 +39,6 @@ const Characters = () => {
     }, [currentPage])
 
     const handlePageChange = (pageNumber) => {
-        // Cambiar la página actual cuando se haga clic en un número de página en el paginador
         setCurrentPage(pageNumber)
     }
 
@@ -60,13 +52,11 @@ const Characters = () => {
         setHoveredCard(null)
     }
 
-    // Función para abrir el modal y establecer el personaje seleccionado
     const handleCharacterClick = (character) => {
         setSelectedCharacter(character)
         setShowModal(true)
     }
 
-    // Función para cerrar el modal y limpiar el personaje seleccionado
     const closeModal = () => {
         setSelectedCharacter(null)
         setShowModal(false)
@@ -75,7 +65,7 @@ const Characters = () => {
     return (
         <>
             <div>
-                <Grid container spacing={3} sx={{ mt: 1, px: 2 }}>
+                <Grid container spacing={3} sx={{ mt: 10, px: 2 }}>
                     {characters.map((character, index) => (
                         <Grid item key={character.id} xs={6} sm={6} md={2}>
                             <animated.div
@@ -94,11 +84,9 @@ const Characters = () => {
                                 <Card
                                     onClick={() => handleCharacterClick(character)}
                                     sx={{
-                                        // maxWidth: 300,
                                         maxWidth: 200,
                                         margin: 'auto',
                                         bgcolor: 'black',
-                                        // height: '350px',
                                         height: '300px',
                                         boxShadow: 'none',
                                     }}
@@ -106,7 +94,6 @@ const Characters = () => {
                                     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                                         <CardMedia
                                             component="img"
-                                            // height="200"
                                             height="150"
                                             width="100%"
                                             image={`${character.thumbnail.path}.${character.thumbnail.extension}`}
@@ -162,12 +149,7 @@ const Characters = () => {
                                             <Typography variant="h5" fontWeight={'bold'} fontSize={'xx-large'}>
                                                 {character.name}
                                             </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                // sx={{ mt: 4 }}
-                                                fontWeight={'bold'}
-                                                fontSize={'large'}
-                                            >
+                                            <Typography variant="body2" fontWeight={'bold'} fontSize={'large'}>
                                                 {character.comics.items[0]?.name}
                                             </Typography>
                                         </Box>

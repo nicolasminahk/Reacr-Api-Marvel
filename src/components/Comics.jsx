@@ -22,8 +22,6 @@ const Comics = () => {
             )
             .then((res) => {
                 setComics(res.data.data.results)
-                console.log(res.data.data.results)
-
                 setTotalPages(Math.ceil(res.data.data.total / ITEMS_PER_PAGE))
             })
             .catch((error) => console.log(error))
@@ -62,8 +60,7 @@ const Comics = () => {
     }
     return (
         <div>
-            <Grid container spacing={3} sx={{ mt: 1, px: 2 }}>
-                {/* <Grid container spacing={2} justifyContent="center"> */}
+            <Grid container spacing={3} sx={{ mt: 10, px: 2 }}>
                 {comics.map((comic, index) => (
                     <Grid item key={comic.id} xs={6} sm={6} md={4}>
                         <animated.div
@@ -148,10 +145,10 @@ const Comics = () => {
                                         backgroundColor: 'red',
                                         color: 'white',
                                         p: 2,
-                                        display: 'grid', // Cambiamos el display a "grid"
-                                        gridTemplateColumns: '1fr', // Una sola columna
-                                        gridTemplateRows: '1fr auto', // Dos filas: la primera ocupando todo el espacio disponible y la segunda de tamaño automático
-                                        gridGap: '8px', // Espacio entre las filas
+                                        display: 'grid',
+                                        gridTemplateColumns: '1fr',
+                                        gridTemplateRows: '1fr auto',
+                                        gridGap: '8px',
                                     }}
                                 >
                                     <Typography
@@ -176,7 +173,7 @@ const Comics = () => {
                                                         comic.dates.find((date) => date.type === 'onsaleDate').date
                                                     ).toLocaleDateString('en-US', {
                                                         year: 'numeric',
-                                                        month: 'short', // Utilizamos 'short' para mostrar el mes abreviado
+                                                        month: 'short',
                                                         day: 'numeric',
                                                     })}
                                             </Typography>
@@ -189,47 +186,6 @@ const Comics = () => {
                                         </Typography>
                                     </Grid>
                                 </CardContent>
-                                {/* <CardContent
-                                    sx={{
-                                        height: '120px',
-                                        flexGrow: 1,
-                                        backgroundColor: 'red',
-                                        color: 'white',
-                                        p: 2,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'space-between',
-                                        whiteSpace: 'pre-wrap',
-                                    }}
-                                >
-                                    <Box>
-                                        <Grid container justifyContent="space-between">
-                                            <Grid item>
-                                                <Typography
-                                                    variant="subtitle2"
-                                                    fontSize={'x-large'}
-                                                    sx={{ fontWeight: 'bold' }}
-                                                >
-                                                    {truncateTitle(comic.title, 5)}
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Box>
-                                    <Box>
-                                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                                            Published:
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            {comic.dates &&
-                                                comic.dates.find((date) => date.type === 'onsaleDate')?.date}
-                                        </Typography>
-                                    </Box>
-                                    <Typography variant="body2" sx={{ fontWeight: 'light', mt: 1 }}>
-                                        {comic.description
-                                            ? comic.description.slice(0, 100) + '...'
-                                            : 'No description available'}
-                                    </Typography>
-                                </CardContent> */}
                             </Card>
                         </animated.div>
                     </Grid>

@@ -1,15 +1,11 @@
-import { useMediaQuery, Box, Typography, CardMedia, IconButton } from '@mui/material'
+import { useMediaQuery, Box, Typography } from '@mui/material'
 
 const DetailCard = ({ name, image, illustrator, releaseDate, numPages, description, published, writer, penciller }) => {
     const isMobile = useMediaQuery('(max-width: 600px)')
-    console.log(name, description, image)
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mx: isMobile ? '1rem' : 0 }}>
-            {/* Imagen ocupando casi toda la pantalla */}
             <img src={image} alt={name} style={{ width: '100%', height: '80vh', objectFit: 'cover' }} />
-
-            {/* Contenedor blanco con letras rojas */}
             <Box
                 sx={{
                     textAlign: 'left',
@@ -29,7 +25,6 @@ const DetailCard = ({ name, image, illustrator, releaseDate, numPages, descripti
                     {name}
                 </Typography>
 
-                {/* Otras características */}
                 {published && (
                     <Typography variant="subtitle1" fontWeight={'bold'} fontSize={'larger'}>
                         Published: {published}
@@ -50,7 +45,6 @@ const DetailCard = ({ name, image, illustrator, releaseDate, numPages, descripti
                         N° Pages: {numPages}
                     </Typography>
                 )}
-                {/* Descripción con máximo de 2 renglones */}
                 {description && (
                     <Typography
                         variant="body1"

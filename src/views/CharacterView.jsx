@@ -7,7 +7,6 @@ const CharacterView = () => {
     return (
         <>
             <Navbar />
-            <NavList />
             <Characters />
         </>
     )

@@ -7,7 +7,6 @@ const ComicsView = () => {
     return (
         <div>
             <Navbar />
-            <NavList />
             <Comics />
         </div>
     )

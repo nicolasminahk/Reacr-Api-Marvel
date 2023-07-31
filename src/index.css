@@ -1,16 +1,13 @@
 /* index.css */
 /* @import url('https://fonts.googleapis.com/css2?family=BIZ+UDPMincho&family=Oswald&display=swap'); */
 @import url('https://fonts.cdnfonts.com/css/bebas-neue');
-/* Estilos para la vista de escritorio */
 .card-desktop {
-    max-width: 00px; /* Ancho fijo en 300px */
     margin: auto;
     cursor: pointer;
 }
 
-/* Estilos para la vista móvil */
 .card-mobile {
-    width: 100%; /* Ocupar todo el ancho de la pantalla */
+    width: 100%;
     margin: auto;
     cursor: pointer;
 }
